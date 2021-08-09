@@ -19,7 +19,7 @@ class myFirstApp extends StatelessWidget {
           title: Text("My First App"),
         ),
         body: Center(
-          child: FlatButton(
+          child: RaisedButton(
             splashColor: Colors.cyan,
             onPressed: (){},
             child: Text(
