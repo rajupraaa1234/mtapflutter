@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
-  home: Scaffold(
-      appBar: AppBar(
-          title : Text('My first App'),
+    home: Scaffold(
+        appBar: AppBar(
+          title: Text(
+              'My first App',
+                  style: TextStyle(
+                    fontSize: 20.0,
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 2.0
+          ),
+
+          ),
           centerTitle: true,
-      ),
-  )
-  )
-);
+        ),
+        body: Center(
+          child: Text("Welcome To MoneyTap"),
+        ),
+           floatingActionButton: FloatingActionButton(
+             onPressed: () {  },
+             child: Text('Click me'),
+           ),
+    )));
 
 // void main()=>
 //   runApp(
