@@ -1,28 +1,70 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MaterialApp(
-    home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-              'My first App',
-                  style: TextStyle(
-                    fontSize: 20.0,
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2.0
-          ),
+void main(){
+    runApp(myFirstApp());
+}
 
-          ),
-          centerTitle: true,
+class myFirstApp extends StatelessWidget {
+  const myFirstApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+       title: "My First App",
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("My First App"),
         ),
         body: Center(
-          child: Text("Welcome To MoneyTap"),
-        ),
-           floatingActionButton: FloatingActionButton(
-             onPressed: () {  },
-             child: Text('Click me'),
+          child: FlatButton(
+            splashColor: Colors.cyan,
+            onPressed: (){},
+            child: Text(
+              "Flat Button",
+              style: TextStyle(
+                fontSize: 24.0,
+              ),
+            ),
+          )
+              // child: Text("This is First Flutter App",
+              //     style: new TextStyle(
+              //        color: Colors.red,
+              //       fontSize: 25.0,
+              //       fontStyle: FontStyle.italic,
+              // ),
            ),
-    )));
+        ),
+
+    );
+  }
+}
+
+// void main() => runApp(MaterialApp(
+//     home: Scaffold(
+//         appBar: AppBar(
+//           title: Text(
+//               'My first App',
+//                   style: TextStyle(
+//                     fontSize: 20.0,
+//             color: Colors.red,
+//             fontWeight: FontWeight.bold,
+//             letterSpacing: 2.0
+//           ),
+//
+//           ),
+//           centerTitle: true,
+//         ),
+//         body: Center(
+//           child: Text("Welcome To MoneyTap"),
+//         ),
+//            floatingActionButton: FloatingActionButton(
+//              onPressed: () {  },
+//              child: Text('Click me'),
+//            ),
+//     )));
 
 // void main()=>
 //   runApp(
