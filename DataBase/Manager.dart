@@ -3,73 +3,128 @@ import 'dart:developer';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
+import 'DogList.dart';
+import 'DogDao.dart';
 import 'Dog.dart';
 
+var dogDao = new DogDao();
+var database;
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final database = openDatabase(
-      join(await getDatabasesPath(), 'dogdb'),
-      version: 1,
-      onCreate: (db, version) {
-        String sql = 'CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)';
-        db.execute(sql);
-      }
-  );
+  database = dogDao.openDb();
+  runApp(MaterialApp(
+    home: MyApp(),
+  ));
 
-  // CRUD
-  Future<int> insertDog(Dog dog) async{
-    final db = await database;
-    int position = await db.insert('dogs',
-        dog.toMap(), nullColumnHack: null, conflictAlgorithm: ConflictAlgorithm.replace);
-    print('Inserted Position  $position');
-    return position;
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _State createState() => _State();
+}
+
+class _State extends State<MyApp> {
+  TextEditingController dogname = TextEditingController();
+  TextEditingController DogAge = TextEditingController();
+  TextEditingController DogId = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Dog App'),
+        ),
+        body: Padding(
+            padding: EdgeInsets.all(10),
+            child: ListView(
+              children: <Widget>[
+                Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Insert Dog Data',
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30),
+                    )),
+                Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Add',
+                      style: TextStyle(fontSize: 20),
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: dogname,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Dog Name',
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: DogId,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Dog Id',
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  child: TextField(
+                    obscureText: true,
+                    controller: DogAge,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Dog Age',
+                    ),
+                  ),
+                ),
+                Container(
+                    height: 50,
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Colors.blue,
+                      child: Text('Add'),
+                      onPressed: () {
+                        onClickLogin(dogname.text,DogId.text,DogAge.text);
+                      },
+                    )),
+                Container(
+                    height: 50,
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Colors.blue,
+                      child: Text('Get List'),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>GetList(),
+                        ));
+                      },
+                    )),
+              ],
+            )));
   }
 
-  Future<List<Dog>> getDogs() async{
-    final db = await database;
-
-    List<Map<String, dynamic>> mapRows = await db.query('dogs');
-    return List.generate(mapRows.length, (index) {
-      var dog = Dog(
-        id: mapRows[index]['id'],
-        name: mapRows[index]['name'],
-        age: mapRows[index]['age'],
-      );
-      print(dog.toString());
-      return dog;
-    });
-
-    // List<Map<String, dynamic>> maps = await db.query('dogs');
-    // return List.generate(maps.length, (i) {
-    //   return Dog(
-    //     id: maps[i]['id'],
-    //     name: maps[i]['name'],
-    //     age: maps[i]['age'],
-    //   );
-    // });
-
+  void onClickLogin(String name1, String id1, String age1) {
+    int Myid = int.parse(id1);
+    int Myage = int.parse(age1);
+    var dog = Dog(id: Myid, name: name1, age: Myage);
+    Future<int> res = dogDao.insertDog(dog);
+    if(res!=-1){
+      print("Failed");
+    }
   }
-
-  Future<int> updateDog(Dog dog) async{
-    final db = await database;
-    int rowPosition = await db.update('dogs', dog.toMap(), where: 'id = ?', whereArgs: [dog.id]);
-    return rowPosition;
-  }
-
-  void deleteDog(Dog dog) async{
-    final db = await database;
-    int rowPosition = await db.delete('dogs', where: 'id = ?', whereArgs: [dog.id]);
-  }
-
-  Future<int> res = insertDog(
-    Dog(id: 1, name: "Raju kumar", age: 23),
-  );
-
-  await getDogs();
-
-
 
 }
