@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -68,9 +69,12 @@ class _FlutterDemoState extends State<FlutterDemo> {
         _counter = value;
       });
     });
+
   }
 
   Future<File> _incrementCounter() {
+    addStringToSF();
+    getStringValuesSF();
     setState(() {
       _counter++;
     });
@@ -91,10 +95,24 @@ class _FlutterDemoState extends State<FlutterDemo> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed:
+          _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  addStringToSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('stringValue', "Raju kumar");
+  }
+
+  getStringValuesSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return String
+    String? stringValue = prefs.getString('stringValue');
+    print(stringValue);
+    return stringValue;
   }
 }
